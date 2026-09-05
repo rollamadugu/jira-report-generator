@@ -1,0 +1,118 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Scrum Master Daily View</title>
+<style>
+:root{--bg:#fff;--surface:#fff;--surface2:#f7f9fc;--border:#d9e1ec;--text:#0f172a;--text2:#334155;--muted:#64748b;--accent:#2563eb;--accent2:#1d4ed8;--shadow:0 10px 30px rgba(15,23,42,.1);--shadow2:0 6px 18px rgba(15,23,42,.08);--radius:12px}
+html{scroll-behavior:smooth}body{margin:0;min-height:100vh;font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial;color:var(--text);background:var(--bg)}
+.wrap{max-width:1560px;margin:0 auto;padding:18px}
+.hdr{position:sticky;top:0;z-index:50;padding:14px 16px;font-size:18px;font-weight:700;background:var(--surface);border-bottom:1px solid var(--border);box-shadow:var(--shadow2);border-top:4px solid var(--accent)}
+.meta{margin-top:12px;padding:10px 12px;border-radius:var(--radius);border:1px solid var(--border);background:var(--surface2);font-size:12px;color:var(--text2)}
+.meta b{color:var(--text)}
+.card{margin-top:12px;padding:12px;border-radius:var(--radius);background:var(--surface);border:1px solid var(--border);box-shadow:var(--shadow2)}
+.filters{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.filters label{font-weight:700;font-size:12px;color:var(--text2)}
+.input,.select{padding:9px 11px;border-radius:10px;border:1px solid var(--border);background:#fff;color:var(--text);font-size:12px;outline:none}
+.input:focus,.select:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(37,99,235,.15)}
+.btn{padding:9px 12px;border-radius:10px;border:1px solid var(--border);background:#fff;color:var(--text);font-weight:700;font-size:12px;cursor:pointer}
+.btn:hover{background:var(--surface2)}
+#smApply{background:var(--accent);color:#fff;border-color:var(--accent2)}
+#smApply:hover{background:var(--accent2)}
+.countBox{padding:9px 11px;border-radius:10px;border:1px solid var(--border);background:var(--surface2);font-size:12px;font-weight:700;color:var(--text)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
+@media(max-width:1100px){.grid2{grid-template-columns:1fr}}
+.pill{display:inline-block;padding:2px 9px;border-radius:999px;font-weight:700;font-size:11px;border:1px solid rgba(15,23,42,.12)}
+.pill.done{background:#dcfce7;border-color:#86efac;color:#14532d}
+.pill.inprog{background:#dbeafe;border-color:#93c5fd;color:#1e3a8a}
+.pill.todo{background:#f1f5f9;border-color:#cbd5e1;color:#334155}
+.pill.blocked{background:#fee2e2;border-color:#fca5a5;color:#7f1d1d}
+.pill.delayed{background:#ffedd5;border-color:#fdba74;color:#7c2d12}
+.pill.na{background:#e5e7eb;border-color:#cbd5e1;color:#334155}
+.panel{border:1px solid var(--border);border-radius:var(--radius);padding:12px;background:var(--surface);box-shadow:var(--shadow2)}
+.panel h3{margin:0;font-size:13px;font-weight:700;color:var(--text)}
+.subtle{background:var(--surface2);padding:6px 10px;border-radius:10px;font-size:12px;margin-top:4px;color:var(--text2)}
+.kpis{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.kpi{border:1px solid var(--border);border-radius:999px;padding:8px 12px;background:#fff;font-size:12px;font-weight:700;color:var(--text);display:flex;align-items:center;gap:6px}
+details{border:1px solid var(--border);border-radius:var(--radius);margin-top:10px;background:#fff}
+summary{cursor:pointer;padding:10px 12px;font-weight:700;background:var(--surface2);display:flex;justify-content:space-between;align-items:center;list-style:none;color:var(--text)}
+summary::-webkit-details-marker{display:none}
+summary::before{content:"▸";margin-right:8px;transition:transform .2s}
+details[open] summary::before{transform:rotate(90deg)}
+.detailsBody{padding:12px}
+.smBody{margin-top:12px;max-height:70vh;overflow:auto}
+.hierarchy-card{border-radius:var(--radius);padding:16px;margin:12px 0;background:var(--surface);border:1px solid var(--border);box-shadow:var(--shadow2)}
+.hierarchy-chain{display:flex;flex-wrap:wrap;gap:8px;font-size:11px;margin-bottom:10px;align-items:center}
+.hierarchy-chain span{background:var(--surface2);padding:2px 8px;border-radius:10px;font-weight:700;color:var(--text2)}
+.hierarchy-chain .subtask-key-chip{background-color:var(--accent);color:#fff}
+.hierarchy-item{padding:10px;border-left:4px solid var(--border);margin:6px 0;background:#fff;border-radius:10px}
+.hierarchy-label{font-size:10px;color:var(--muted);font-weight:700;text-transform:uppercase}
+.hierarchy-key{font-weight:700;font-size:12px;margin-top:4px;color:var(--text)}
+.hierarchy-summary{font-size:12px;margin-top:4px;color:var(--text2)}
+.hierarchy-meta{font-size:11px;margin-top:8px;padding-top:8px;border-top:1px solid #f1f5f9;color:var(--text2)}
+.hierarchy-item.subtask{background:#eff6ff;border:1px solid #bfdbfe;border-left:4px solid var(--accent)}
+.hierarchy-item.subtask .hierarchy-summary{font-weight:700;color:var(--accent2)}
+.empty{text-align:center;color:var(--muted);padding:40px;font-weight:700}
+.refresh-info{display:inline-flex;align-items:center;gap:6px;background:#dcfce7;color:#14532d;padding:4px 10px;border-radius:999px;font-size:11px;font-weight:600;margin-left:10px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="hdr">Scrum Master Daily View<span class="refresh-info">🔄 Auto-updates every 15 min</span></div>
+<div class="meta"><b>Generated:</b> 2026-09-05 23:16:48 UTC | <b>Total Subtasks:</b> 0</div>
+<div class="card">
+<div class="filters">
+<select id="smAssignee" class="select"><option value="">Select Assignee...</option></select>
+<label>Start:</label><input type="date" id="smStartDate" class="input"/>
+<label>End:</label><input type="date" id="smEndDate" class="input"/>
+<button id="smApply" class="btn">Apply</button>
+<button id="smReset" class="btn">Reset</button>
+<div id="smCount" class="countBox">In range: 0 | All: 0</div>
+</div>
+<div class="grid2" id="dashGrid" style="display:none;">
+<div class="panel"><h3>📅 In Selected Range</h3><div class="kpis" id="kpiInRange"></div><div id="sectionsInRange"></div></div>
+<div class="panel"><h3>📦 All Tasks</h3><div class="kpis" id="kpiAll"></div><div id="sectionsAll"></div></div>
+</div>
+<div id="smBody" class="smBody"><div class="empty">Select assignee and date range, then click Apply</div></div>
+</div>
+</div>
+<script>
+window.__SCRUM_MASTER_INDEX=[];
+(function(){
+const DATA=window.__SCRUM_MASTER_INDEX||[];
+const assigneeSelect=document.getElementById("smAssignee");
+const startDateInput=document.getElementById("smStartDate");
+const endDateInput=document.getElementById("smEndDate");
+const applyBtn=document.getElementById("smApply");
+const resetBtn=document.getElementById("smReset");
+const bodyDiv=document.getElementById("smBody");
+const countDiv=document.getElementById("smCount");
+const dashGrid=document.getElementById("dashGrid");
+const kpiInRange=document.getElementById("kpiInRange");
+const kpiAll=document.getElementById("kpiAll");
+const sectionsInRange=document.getElementById("sectionsInRange");
+const sectionsAll=document.getElementById("sectionsAll");
+const STATUS_ORDER=["TODO","IN_PROGRESS","BLOCKED","DELAYED","DONE","NA"];
+const STATUS_LABEL={"TODO":"To Do","IN_PROGRESS":"In Progress","BLOCKED":"Blocked","DELAYED":"Delayed","DONE":"Done","NA":"N/A"};
+function esc(s){return s==null?"":String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")}
+function pillClass(cat){if(cat==="DONE")return"pill done";if(cat==="IN_PROGRESS")return"pill inprog";if(cat==="BLOCKED")return"pill blocked";if(cat==="DELAYED")return"pill delayed";if(cat==="NA")return"pill na";return"pill todo"}
+const assignees=new Set();DATA.forEach(r=>{if(r.assignee)assignees.add(r.assignee)});
+Array.from(assignees).sort().forEach(a=>{const opt=document.createElement("option");opt.value=a;opt.textContent=a;assigneeSelect.appendChild(opt)});
+endDateInput.value=new Date().toISOString().split("T")[0];
+function ymdToNum(ymd){return ymd?Number(ymd.replace(/-/g,"")):null}
+function inRange(row,sd,ed){const s=ymdToNum(row.start_date),e=ymdToNum(row.end_date);if(!s&&!e)return false;return(s&&s>=sd&&s<=ed)||(e&&e>=sd&&e<=ed)}
+function computeCounts(rows){const counts={};STATUS_ORDER.forEach(s=>counts[s]=0);rows.forEach(r=>{counts[r.subtask_status_cat]=(counts[r.subtask_status_cat]||0)+1});return counts}
+function renderKpis(el,counts,total){let html=`<div class="kpi"><b>Total:</b> ${total}</div>`;STATUS_ORDER.forEach(cat=>{if(counts[cat]>0)html+=`<div class="kpi"><span class="${pillClass(cat)}">${STATUS_LABEL[cat]}</span> ${counts[cat]}</div>`});el.innerHTML=html}
+function renderCard(r){return`<div class="hierarchy-card"><div class="hierarchy-chain"><span>${esc(r.theme_key)}</span><span>→</span><span>${esc(r.ini_key)}</span><span>→</span><span>${esc(r.epic_key)}</span><span>→</span><span>${esc(r.story_key)}</span><span>→</span><span class="subtask-key-chip">${esc(r.subtask_key)}</span></div><div class="hierarchy-item"><div class="hierarchy-label">Theme</div><div class="hierarchy-key">${esc(r.theme_key)}</div><div class="hierarchy-summary">${esc(r.theme_summary)}</div></div><div class="hierarchy-item" style="margin-left:16px"><div class="hierarchy-label">Initiative</div><div class="hierarchy-key">${esc(r.ini_key)}</div><div class="hierarchy-summary">${esc(r.ini_summary)}</div></div><div class="hierarchy-item" style="margin-left:32px"><div class="hierarchy-label">Epic (${esc(r.epic_phase)})</div><div class="hierarchy-key">${esc(r.epic_key)}</div><div class="hierarchy-summary">${esc(r.epic_summary)}</div></div><div class="hierarchy-item" style="margin-left:48px"><div class="hierarchy-label">Story</div><div class="hierarchy-key">${esc(r.story_key)}</div><div class="hierarchy-summary">${esc(r.story_summary)}</div></div><div class="hierarchy-item subtask" style="margin-left:64px"><div class="hierarchy-label">Subtask</div><div class="hierarchy-key">${esc(r.subtask_key)}</div><div class="hierarchy-summary">${esc(r.subtask_summary)}</div><div class="hierarchy-meta"><b>Status:</b> <span class="${pillClass(r.subtask_status_cat)}">${esc(r.subtask_status)}</span><br/><b>Start:</b> ${esc(r.start_date||"Not Set")} | <b>End:</b> ${esc(r.end_date||"Not Set")}<br/><b>Assignee:</b> ${esc(r.assignee)}</div></div></div>`}
+function renderSections(el,rows,counts){let html="";STATUS_ORDER.forEach(cat=>{const items=rows.filter(r=>r.subtask_status_cat===cat);if(items.length===0)return;html+=`<details><summary><span class="${pillClass(cat)}">${STATUS_LABEL[cat]}</span><span>${items.length} tasks</span></summary><div class="detailsBody">${items.map(renderCard).join("")}</div></details>`});el.innerHTML=html||'<div class="empty">No tasks</div>'}
+function render(){const assignee=assigneeSelect.value.trim();const sd=startDateInput.value,ed=endDateInput.value;if(!assignee||!sd||!ed){bodyDiv.innerHTML='<div class="empty">Please select assignee and both dates</div>';dashGrid.style.display="none";return}const sdNum=ymdToNum(sd),edNum=ymdToNum(ed);if(sdNum>edNum){bodyDiv.innerHTML='<div class="empty">Start date must be before end date</div>';return}const allRows=DATA.filter(r=>r.assignee===assignee);const inRangeRows=allRows.filter(r=>inRange(r,sdNum,edNum));countDiv.textContent=`In range: ${inRangeRows.length} | All: ${allRows.length}`;dashGrid.style.display="grid";const countsAll=computeCounts(allRows);const countsIn=computeCounts(inRangeRows);renderKpis(kpiAll,countsAll,allRows.length);renderKpis(kpiInRange,countsIn,inRangeRows.length);renderSections(sectionsAll,allRows,countsAll);renderSections(sectionsInRange,inRangeRows,countsIn);if(inRangeRows.length===0){bodyDiv.innerHTML='<div class="empty">No subtasks found in selected range</div>'}else{bodyDiv.innerHTML=inRangeRows.map(renderCard).join("")}}
+applyBtn.addEventListener("click",render);
+resetBtn.addEventListener("click",()=>{assigneeSelect.value="";startDateInput.value="";endDateInput.value=new Date().toISOString().split("T")[0];dashGrid.style.display="none";bodyDiv.innerHTML='<div class="empty">Select assignee and date range</div>';countDiv.textContent="In range: 0 | All: 0"});
+const saved=localStorage.getItem("jira_view_state");if(saved){try{const st=JSON.parse(saved);if(st.assignee)assigneeSelect.value=st.assignee;if(st.startDate)startDateInput.value=st.startDate;if(st.endDate)endDateInput.value=st.endDate;if(st.assignee&&st.startDate&&st.endDate)render()}catch(e){}}
+function saveState(){localStorage.setItem("jira_view_state",JSON.stringify({assignee:assigneeSelect.value,startDate:startDateInput.value,endDate:endDateInput.value}))}
+assigneeSelect.addEventListener("change",saveState);startDateInput.addEventListener("change",saveState);endDateInput.addEventListener("change",saveState);
+})();
+</script>
+</body>
+</html>
